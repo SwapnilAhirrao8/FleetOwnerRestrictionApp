@@ -15,6 +15,15 @@ public class FleetBrReceiever extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-       //TODO set max_speed_limit via listing to SMS in case no network for Fleet Owner
-    }
+  //TODO set max_speed_limit via listing to SMS in case no network for Fleet Owner
+
+        switch (intent.getAction()){
+        case OnBooT:
+            //TODO Register Service on Boot Complete
+            FleetApplication.getInstance().startService(new Intent(context,
+                    CarRestrictionService.class));
+            break;
+            case onRecieveMessage:
+            //TODO Set Speed Limit if recieved by incoming message
+            break;    }
 }
