@@ -26,7 +26,7 @@ import com.swapnil.driverestrictiontestapp.viewmodel.FleetViewModel;
 public class FleetLoginActivity extends Activity implements FleetVehicleProperties {
     //Declaration of fields used in acrivitu
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 0;
-    private static final int OTHER_IN_CASE_ANY = 1;
+    private static final int FCM_NOTIFICATION = 1;
     private FleetBrReceiever fleetBrReceiever;
     private FleetViewModel fleetViewModel;
 
@@ -49,11 +49,10 @@ public class FleetLoginActivity extends Activity implements FleetVehicleProperti
 
     //Below will be used to register viewmodel instances
     private void registerViewModels() {
-
        fleetViewModel= ViewModelProviders(FleetApplication.
                getInstance()).get(FleetViewModel.class);
 
-        fleetViewModel.getCarSpeedData().observe(viewLifecycleOwner) {
+        fleetViewModel.getCarSpeedData().observe(this) {
             if(fleetViewModel.getCarSpeedData().getValue() > FleetUtils.MAX_CAR_SPEED_LIMIT){
                 //Check if internet is available & firebase service is available
                 if(FleetUtils.isInternetAvailable==1 && FleetUtils.isFirebaseServiceAVailable==1){
@@ -71,7 +70,6 @@ public class FleetLoginActivity extends Activity implements FleetVehicleProperti
                 //Show Notification to Driver on HMI/ Clusto-meter
                 FleetUtils.showSpeedLimitExceedNotificationDriver("Your Speed Limit" +
                         " Exceeds" +fleetViewModel.getCarSpeedData();
-
             }
         }
     }
@@ -137,7 +135,7 @@ public class FleetLoginActivity extends Activity implements FleetVehicleProperti
                     return;
                 }
             }
-            case OTHER_IN_CASE_ANY: {
+            case FCM_NOTIFICATION: {
                 //TODO in-case of other permissions
             }
         }
