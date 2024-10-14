@@ -7,4 +7,7 @@ package com.swapnil.driverestrictiontestapp.managers;
 //This class will be used to do FCM communication
 public class FleetFirebaseManagerService {
     //TODO implement FirebaseService
+    private void sendNotification(String carSpeed){
+        //TODO send notificationnto fleet owner
+    }
 }

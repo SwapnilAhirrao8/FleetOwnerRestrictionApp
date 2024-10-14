@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.swapnil.driverestrictiontestapp.FleetApplication;
-import com.swapnil.driverestrictiontestapp.models.CarRestrictionService;
 
 /**
  * Created by Swapnil Ahirrao on 12,October,2024
@@ -18,18 +17,15 @@ public class FleetBrReceiever extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-  //TODO set max_speed_limit via listing to SMS in case no network for Fleet Owner
+       //TODO set max_speed_limit via listing to SMS in case no network for Fleet Owner
+
         switch (intent.getAction()){
-        case OnBooT:
-            //TODO Register Service on Boot Complete
-            FleetApplication.getInstance().startService(new Intent(context,
-                    CarRestrictionService.class))
-            break;
-            case onRecieveMessage:
+
+            case onRecieveMessageEvent:
             //TODO Set Speed Limit if recieved by incoming message
                 FleetUtils.MAX_CAR_SPEED_LIMIT= (int) intent.getExtras().get("MAX_SPEED_DETAILS");
                 break;
-		}
-           
-}
+
+
+    }
 }

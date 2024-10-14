@@ -19,7 +19,7 @@ public class FleetViewModel extends ViewModel  {
     MutableLiveData<String> vehicleChassisNo=new MutableLiveData<>();
     MutableLiveData<String> vehicleLoginId=new MutableLiveData<>();
 
-    MutableLiveData<Integer> carSpeedData=new MutableLiveData<>();
+    MutableLiveData<Integer> carSpeedData=new MutableLiveData<Integer>();
 
     //TODO any other car properties have to be listed
 

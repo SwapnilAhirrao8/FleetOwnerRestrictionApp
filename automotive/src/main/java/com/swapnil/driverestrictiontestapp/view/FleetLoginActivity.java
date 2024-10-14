@@ -13,6 +13,9 @@ import androidx.lifecycle.viewmodel.internal.ViewModelProviders;
 
 import com.swapnil.driverestrictiontestapp.FleetApplication;
 import com.swapnil.driverestrictiontestapp.R;
+import com.swapnil.driverestrictiontestapp.managers.FleetAwsManager;
+import com.swapnil.driverestrictiontestapp.managers.FleetFirebaseManagerService;
+import com.swapnil.driverestrictiontestapp.managers.FleetNotificationManager;
 import com.swapnil.driverestrictiontestapp.models.FleetVehicleProperties;
 import com.swapnil.driverestrictiontestapp.utis.FleetBrReceiever;
 import com.swapnil.driverestrictiontestapp.utis.FleetUtils;
@@ -42,14 +45,15 @@ public class FleetLoginActivity extends Activity implements FleetVehicleProperti
 
     //register interface for Vehicle properties
     private void registerFleetVehiclePropertiesEvents() {
-        //TODO register interface  so that vehicle properties events can be
-        // get using FleetVehicleProperties();
+        //TODO this is dummy interface as I don't have access to CarProperties
+        // this interface will be invoked from VHAL/CarProperties which will give CarSpeed details
+        // using FleetVehicleProperties();
 
     }
 
     //Below will be used to register viewmodel instances
     private void registerViewModels() {
-       fleetViewModel= ViewModelProviders(FleetApplication.
+       fleetViewModel= this.ViewModelProviders(FleetApplication.
                getInstance()).get(FleetViewModel.class);
 
         fleetViewModel.getCarSpeedData().observe(this) {
@@ -57,19 +61,25 @@ public class FleetLoginActivity extends Activity implements FleetVehicleProperti
                 //Check if internet is available & firebase service is available
                 if(FleetUtils.isInternetAvailable==1 && FleetUtils.isFirebaseServiceAVailable==1){
                     //TODO send notification to FleetOwner using Firebase service
-
+                    FleetFirebaseManagerService.sendNotification(String.valueOf(fleetViewModel
+                            .getCarSpeedData()
+                            .getValue()));
                 }else if (FleetUtils.isInternetAvailable==1 && FleetUtils.isAwsServiceAvailable==1 ){
                     //Check if internet is available & firebase service is available
                     //TODO send notification to FleetOwner using ASW service
+                    FleetAwsManager.sendNotification(String.valueOf(fleetViewModel
+                            .getCarSpeedData()
+                            .getValue()));
 
                 }else {
                     //in case both services not available send SMS using sim service
                     FleetUtils.sendSpeedLimitExceedSms("Speed Limit Excceeded by renter"
-                            +fleetViewModel.getCarSpeedData().getValue());
+                            +fleetViewModel.getCarSpeedData().getValue(),"Number of Fleet " +
+                            "Owner");
                 }
                 //Show Notification to Driver on HMI/ Clusto-meter
                 FleetUtils.showSpeedLimitExceedNotificationDriver("Your Speed Limit" +
-                        " Exceeds" +fleetViewModel.getCarSpeedData();
+                        " Exceeds" +fleetViewModel.getCarSpeedData());
             }
         }
     }
@@ -90,7 +100,15 @@ public class FleetLoginActivity extends Activity implements FleetVehicleProperti
         //TODO register all views eg:layout views which will be used for login
         registerReceiver();
         registerViewModels();
+        registerManager();
         registerFleetVehiclePropertiesEvents();
+    }
+
+    private void registerManager() {
+        //TODO Register Manager aws/firebase
+        FleetAwsManager fleetAwsManager= new FleetAwsManager();
+        FleetFirebaseManagerService fleetFirebaseManagerService= new FleetFirebaseManagerService();
+        FleetNotificationManager fleetNotificationManager= new FleetNotificationManager();
     }
 
     @Override
@@ -155,7 +173,7 @@ public class FleetLoginActivity extends Activity implements FleetVehicleProperti
 
     //below Carspeed will be set to viewmodel fields once updated
     @Override
-    public void getVehicleSpeed(Integer carSpeedDetailslistener) {
-        fleetViewModel.setCarSpeedData(carSpeedDetailslistener);
+    public void getVehicleSpeed(Integer carSpeedDetails) {
+        fleetViewModel.setCarSpeedData(carSpeedDetails);
     }
 }
